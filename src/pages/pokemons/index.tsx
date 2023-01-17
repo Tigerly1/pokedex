@@ -46,7 +46,8 @@ const Pokemons = () => {
                     {filteredData.map((item: PokemonData) => ((
                         <Card title={item.id + ".  " + item.name} size="small" key={item.id.toString()}>
                             <Image alt='pokemon' src={item.imageUrl} width={200} height={200} />
-                            <Title level={5}>Hp: {item.stats.hp}, Attack: {item.stats.attack}, Defense: {item.stats.defense}, Speeed: {item.stats.speed} </Title>
+                            <Title level={5}>Hp: {item.stats.hp}, Attack: {item.stats.attack} </Title>
+                            <Title level={5}>Defense: {item.stats.defense}, Speeed: {item.stats.speed} </Title>
                             <Space direction="horizontal">
                                 {item.types.map((type) => {
                                     return (<Text style={colors[type as keyof typeof colors]} key={type}>{type + " "}</Text>)
