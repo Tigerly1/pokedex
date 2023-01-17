@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Card, Space, Typography, Image } from 'antd';
+import { Input, Card, Space, Typography, Image, Spin } from 'antd';
 import { fetchPokemons } from 'src/pages/api/pokeApi'
 import { PokemonData } from "@/types/pokemon";
 import { colors } from "@/styles/colors"
@@ -7,11 +7,10 @@ import { colors } from "@/styles/colors"
 const { Text, Title } = Typography;
 const { Search } = Input;
 
-const textCenter = { textAlign: "center" }
-
 const Pokemons = () => {
     const [data, setData] = useState<PokemonData[]>([])
     const [filteredData, setFilteredData] = useState<PokemonData[]>([])
+    const [isLoading, setIsLoading] = useState(true);
 
     const onSearch = (value: string) => {
         if (value === '') {
@@ -28,18 +27,32 @@ const Pokemons = () => {
     const loadData = async () => {
         const newData = await fetchPokemons(300, 0);
         //await prefetchImages(newData);
+        setIsLoading(true);
 
         setData((prev: PokemonData[]) => [...newData]);
         setFilteredData((prev: PokemonData[]) => [...newData]);
-        console.log(newData)
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 3000)
+
     }
+
+    const loadingIndicator = () => {
+        return (
+            <Space id="loading">
+                <Spin tip="Loading" size="large">
+
+                </Spin>
+            </Space>
+        )
+    };
 
     useEffect(() => {
         loadData();
     }, [])
 
     return (
-        <>
+        <>  {isLoading ? loadingIndicator() :
             <Space direction="vertical" style={{ display: 'flex', alignItems: "center", marginLeft: "auto", marginRight: "auto" }}>
                 <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                 <Space direction="horizontal" size="middle" style={{ display: 'flex', justifyContent: "center", margin: "auto" }} wrap>
@@ -56,8 +69,12 @@ const Pokemons = () => {
                             </Space>
                         </Card>
                     )))}
+
                 </Space>
+
             </Space>
+        }
+
         </>
 
     );
